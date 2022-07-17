@@ -24,4 +24,5 @@ The location of the default VJOY installation is usually C:\Program Files\Vjoy
 ## Project references
 
 MacroDeck: https://github.com/Macro-Deck-org/Macro-Deck
+
 VJoy: https://github.com/njz3/vjoy
