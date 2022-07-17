@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon />
+    <OutputType>Library</OutputType>
+    <StartupObject />
+    <BaseOutputPath>C:\Users\etien\AppData\Roaming\Macro Deck\plugins\muchimi.vjoy</BaseOutputPath>
+	<OutputPath Condition="'$(OutputPath)' == ''">C:\Users\etien\AppData\Roaming\Macro Deck\plugins\muchimi.vjoy</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <Platforms>AnyCPU</Platforms>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Macro-Deck-main\Macro Deck 2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="vJoyInterfaceWrap">
+      <HintPath>vJoyInterfaceWrap.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="vJoyInterface.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vJoyInterfaceWrap.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
