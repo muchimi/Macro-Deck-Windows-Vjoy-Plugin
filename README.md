@@ -21,3 +21,7 @@ The plugin needs a pair of DLLs to function correctly that match the version of 
 The particular version I use is 2.2.1.0 at the time of compilation, but you can replace the vJoyInterface.dll and vJoyInterfaceWrap.dll with the version you have installed on your machine.
 The location of the default VJOY installation is usually C:\Program Files\Vjoy
 
+## Project references
+
+MacroDeck: https://github.com/Macro-Deck-org/Macro-Deck
+VJoy: https://github.com/njz3/vjoy
