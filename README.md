@@ -13,7 +13,7 @@ The current version is compiled against .NET CORE 3.1
 
 ## Installation
 
-Place the muchimi.vjoy folder in the zip file to %appdata%\macro deck\plugin folder.
+Place the muchimi.vjoy folder in the zip file to %appdata%\macro deck\plugins folder.
 
 ## VJOY consideration
 
