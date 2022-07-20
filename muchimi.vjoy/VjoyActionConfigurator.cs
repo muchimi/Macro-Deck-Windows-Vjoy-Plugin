@@ -1,18 +1,8 @@
-﻿using SuchByte.MacroDeck.Plugins;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Reflection;
-using System.Threading;
-using Windows.Phone.Notification.Management;
-using Newtonsoft.Json.Linq;
-using SuchByte.MacroDeck.ActionButton;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
 using SuchByte.MacroDeck.Logging;
-using vJoy.Wrapper;
-
 
 
 namespace muchimi_vjoy

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace vJoy.Wrapper
+﻿namespace vJoy.Wrapper
 {
     public enum Hats
     {

@@ -5,9 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using GregsStack.InputSimulatorStandard.Native;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
+using GregsStack.InputSimulatorStandard.Native;
+using GregsStack.InputSimulatorStandard;
 
 namespace muchimi_vjoy
 {
@@ -66,6 +67,8 @@ namespace muchimi_vjoy
             this.label7 = new System.Windows.Forms.Label();
             this.chk_combo_key = new System.Windows.Forms.CheckBox();
             this.lbl_message = new System.Windows.Forms.Label();
+            this.tb_target_application = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -79,7 +82,7 @@ namespace muchimi_vjoy
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 47);
+            this.label1.Location = new System.Drawing.Point(4, 46);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(40, 23);
             this.label1.TabIndex = 0;
@@ -363,10 +366,11 @@ namespace muchimi_vjoy
             // cb_key
             // 
             this.cb_key.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_key.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cb_key.FormattingEnabled = true;
             this.cb_key.Location = new System.Drawing.Point(60, 44);
             this.cb_key.Name = "cb_key";
-            this.cb_key.Size = new System.Drawing.Size(100, 31);
+            this.cb_key.Size = new System.Drawing.Size(217, 27);
             this.cb_key.TabIndex = 7;
             this.cb_key.SelectedIndexChanged += new System.EventHandler(this.cb_key_SelectedIndexChanged);
             // 
@@ -384,17 +388,18 @@ namespace muchimi_vjoy
             // cb_combo_key
             // 
             this.cb_combo_key.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_combo_key.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cb_combo_key.FormattingEnabled = true;
-            this.cb_combo_key.Location = new System.Drawing.Point(370, 42);
+            this.cb_combo_key.Location = new System.Drawing.Point(486, 44);
             this.cb_combo_key.Name = "cb_combo_key";
-            this.cb_combo_key.Size = new System.Drawing.Size(100, 31);
+            this.cb_combo_key.Size = new System.Drawing.Size(217, 27);
             this.cb_combo_key.TabIndex = 9;
             this.cb_combo_key.SelectedIndexChanged += new System.EventHandler(this.cb_combo_key_SelectedIndexChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(310, 45);
+            this.label7.Location = new System.Drawing.Point(426, 46);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(40, 23);
             this.label7.TabIndex = 10;
@@ -403,7 +408,7 @@ namespace muchimi_vjoy
             // chk_combo_key
             // 
             this.chk_combo_key.AutoSize = true;
-            this.chk_combo_key.Location = new System.Drawing.Point(181, 44);
+            this.chk_combo_key.Location = new System.Drawing.Point(297, 46);
             this.chk_combo_key.Name = "chk_combo_key";
             this.chk_combo_key.Size = new System.Drawing.Size(123, 27);
             this.chk_combo_key.TabIndex = 11;
@@ -420,9 +425,28 @@ namespace muchimi_vjoy
             this.lbl_message.TabIndex = 12;
             this.lbl_message.Text = "Message";
             // 
+            // tb_target_application
+            // 
+            this.tb_target_application.Location = new System.Drawing.Point(221, 318);
+            this.tb_target_application.Name = "tb_target_application";
+            this.tb_target_application.Size = new System.Drawing.Size(245, 30);
+            this.tb_target_application.TabIndex = 13;
+            this.tb_target_application.TextChanged += new System.EventHandler(this.tb_target_application_TextChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(218, 290);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(169, 23);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "Target Application:";
+            // 
             // InputActionConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.tb_target_application);
             this.Controls.Add(this.lbl_message);
             this.Controls.Add(this.chk_combo_key);
             this.Controls.Add(this.label7);
@@ -495,91 +519,10 @@ namespace muchimi_vjoy
         private Label label7;
         private CheckBox chk_combo_key;
 
-        private void cb_combo_key_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            data.KeyCode = Enum.Parse<VirtualKeyCode>(cb_combo_key.SelectedItem.ToString());
-        }
 
-        private void chk_combo_key_CheckedChanged(object sender, EventArgs e)
-        {
-            data.UseCombo = chk_combo_key.Checked;
-        }
+   
 
-        private void rb_key_normal_CheckedChanged(object sender, EventArgs e)
-        {
-            data.KeyAction = EKeyAction.normal;
-        }
-
-        private void rb_keydown_CheckedChanged(object sender, EventArgs e)
-        {
-            data.KeyAction = EKeyAction.press;
-        }
-
-        private void rb_keyup_CheckedChanged(object sender, EventArgs e)
-        {
-            data.KeyAction = EKeyAction.release;
-        }
-
-        private void tb_interval_TextChanged(object sender, EventArgs e)
-        {
-            int value;
-            if (!int.TryParse(tb_interval.Text, out value))
-            {
-                lbl_message.Text = "Please enter a valid interval number";
-                return;
-            }
-            if (value < 0)
-            {
-                lbl_message.Text = "Interval number must be >= 0";
-                return;
-            }
-
-            data.KeyInterval = value;
-        }
-
-        private void rb_shift_none_CheckedChanged(object sender, EventArgs e)
-        {
-            data.ShiftMode = EModifierMode.none;
-        }
-
-        private void rb_shift_left_CheckedChanged(object sender, EventArgs e)
-        {
-            data.ShiftMode = EModifierMode.left;
-        }
-
-        private void rb_shift_right_CheckedChanged(object sender, EventArgs e)
-        {
-            data.ShiftMode = EModifierMode.right;
-        }
-
-        private void rb_ctrl_none_CheckedChanged(object sender, EventArgs e)
-        {
-            data.CtrlMode = EModifierMode.none;
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            data.CtrlMode = EModifierMode.left;
-        }
-
-        private void rb_ctrl_right_CheckedChanged(object sender, EventArgs e)
-        {
-            data.CtrlMode = EModifierMode.right;
-        }
-
-        private void rb_alt_none_CheckedChanged(object sender, EventArgs e)
-        {
-            data.AltMode = EModifierMode.none;
-        }
-
-        private void rb_alt_left_CheckedChanged(object sender, EventArgs e)
-        {
-            data.AltMode = EModifierMode.left;
-        }
-
-        private void rb_alt_right_CheckedChanged(object sender, EventArgs e)
-        {
-            data.AltMode = EModifierMode.right;
-        }
+        private TextBox tb_target_application;
+        private Label label8;
     }
 }

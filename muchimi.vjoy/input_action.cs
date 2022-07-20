@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using GregsStack.InputSimulatorStandard;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Automation;
 using GregsStack.InputSimulatorStandard.Native;
 using SuchByte.MacroDeck.ActionButton;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
 using SuchByte.MacroDeck.Logging;
 using SuchByte.MacroDeck.Plugins;
+
+using SuchByte.MacroDeck.Variables;
 using Timer = System.Timers.Timer;
 
 namespace muchimi_vjoy
@@ -32,12 +35,55 @@ namespace muchimi_vjoy
         }
 
 
+        [DllImport("user32.dll")]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
+        [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("User32.dll")]
+        public static extern string GetWindowText(IntPtr hWnd);
+
+
+        bool ActivateApp(string processName = null)
+        {
+
+
+            IntPtr handle;
+
+            handle = FindWindow(null, processName);
+
+            if (handle == IntPtr.Zero)
+            {
+                MacroDeckLogger.Info(Main.Instance, $"didn't find a window named {processName} - looking at processes");
+                // try by process name instead
+                foreach (Process p in Process.GetProcessesByName(processName))
+                {
+                    handle = p.Handle;
+                    MacroDeckLogger.Info(Main.Instance, $"found process:  {p.ProcessName}");
+                    break;
+                }
+            }
+
+            if (handle != IntPtr.Zero && SetForegroundWindow(handle))
+            {
+                MacroDeckLogger.Info(Main.Instance, $"focus changed to {processName}");
+                return true;
+            }
+
+            return false;
+        }
+
         // Gets called when the action is triggered by a button press or an event
         public override void Trigger(string clientId, ActionButton actionButton)
         {
             MacroDeckLogger.Info(Main.Instance, "trigger received");
             var data = new ConfigData();
             data.LoadInputConfig(this);
+
+            var app_name = data.TargetProcess; //"Star Citizen";
+            
 
             if (data.KeyboardEnabled)
             {
@@ -46,6 +92,14 @@ namespace muchimi_vjoy
                 var sequence = data.Sequence;
                 var reversedSequence = new List<VirtualKeyCode>(sequence);
                 reversedSequence.Reverse();
+
+                if (string.IsNullOrEmpty(app_name))
+                {
+                    MacroDeckLogger.Info(Main.Instance, "error: unable to set focus");
+                    return;
+                }
+
+                ActivateApp(app_name);
 
                 switch (data.KeyAction)
                 {
@@ -200,6 +254,8 @@ namespace muchimi_vjoy
                 tb_interval.Text = data.KeyInterval.ToString();
 
                 lbl_message.Text = "";
+
+                tb_target_application.Text = data.TargetProcess;
 
             }
 

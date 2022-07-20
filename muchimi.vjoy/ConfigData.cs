@@ -1,26 +1,9 @@
-﻿using SuchByte.MacroDeck.Plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading;
-using System.Windows.Automation;
 using System.Windows.Forms;
-using System.Windows.Navigation;
-using Windows.ApplicationModel.Calls.Background;
 using GregsStack.InputSimulatorStandard.Native;
-using HidSharp.Reports.Units;
-using muchimi_vjoy;
 using Newtonsoft.Json.Linq;
-using SuchByte.MacroDeck.ActionButton;
-using SuchByte.MacroDeck.GUI;
-using SuchByte.MacroDeck.GUI.CustomControls;
-using SuchByte.MacroDeck.Variables.Plugin.GUI;
-using vJoy.Wrapper;
-using Timer = System.Timers.Timer;
 
 namespace muchimi_vjoy
 {
@@ -95,10 +78,14 @@ namespace muchimi_vjoy
         public const string MOUSE_MOVE_ENABLED = "mouse_move_enabled";
         public const string COMBO_VIRTUAL_KEY = "combo_key";
         public const string USE_COMBO = "use_combo";
+        public const string TARGET_PROCESS = "target_process";
 
 
 
-
+        /// <summary>
+        /// the target process to send a key to - if not specified sends to the last active process
+        /// </summary>
+        public string TargetProcess { get; set; }
 
 
         public string ActionId { get; set; }
@@ -302,6 +289,8 @@ namespace muchimi_vjoy
                     trackStateText = value.ToString();
                 }
 
+
+
                 ButtonNumber = uint.Parse(buttonNumberText);
                 DeviceNumber = uint.Parse(deviceNumberText);
                 ButtonMode = Enum.TryParse(buttonModeText, out EButtonMode buttonMode) ? buttonMode : EButtonMode.pulse;
@@ -321,7 +310,7 @@ namespace muchimi_vjoy
                 Axis = Enum.TryParse(axisNameText, out VJoyAxis axis) ? axis : VJoyAxis.AXIS_X;
                 AxisMode = Enum.TryParse(axisModeText, out EAxisMode axisMode) ? axisMode : EAxisMode.absolute;
 
-                
+
             }
             else
             {
@@ -339,8 +328,8 @@ namespace muchimi_vjoy
                 AxisValue = 0.0; // center
                 Axis = VJoyAxis.AXIS_X;
                 AxisHatValue = -1; // center
+                TargetProcess = "";
 
-                
 
             }
 
@@ -461,6 +450,14 @@ namespace muchimi_vjoy
                     comboKeyCodeText = value.ToString();
                 }
 
+
+                var targetProcessText = "";
+                value = jObject[ConfigData.TARGET_PROCESS];
+                if (value != null)
+                {
+                    targetProcessText = value.ToString();
+                }
+
                 KeyCode = Enum.TryParse(keyCodeText, out VirtualKeyCode keyCode) ? keyCode : VirtualKeyCode.VK_A;
                 ComboKeyCode = Enum.TryParse(comboKeyCodeText, out VirtualKeyCode comboKeyCode) ? comboKeyCode : VirtualKeyCode.VK_A;
                 UseCombo = bool.Parse(useComboText);
@@ -481,6 +478,9 @@ namespace muchimi_vjoy
 
                 MouseX = int.Parse(mouseXText);
                 MouseY = int.Parse(mouseYText);
+
+
+                TargetProcess = targetProcessText;
 
                 return true;
             }
@@ -514,6 +514,8 @@ namespace muchimi_vjoy
                     [ConfigData.AXIS_VALUE] = AxisValue.ToString(),
                     [ConfigData.AXIS_HATVALUE] = AxisHatValue.ToString(),
 
+                    
+
                 };
 
                 action.Configuration = jObject.ToString();
@@ -546,6 +548,7 @@ namespace muchimi_vjoy
                     [ConfigData.MOUSE_MOVE_ENABLED] = MouseMoveEnabled.ToString(),
                     [ConfigData.MOUSE_X] = MouseX.ToString(),
                     [ConfigData.MOUSE_Y] = MouseX.ToString(),
+                    [ConfigData.TARGET_PROCESS] = TargetProcess,
                 };
 
                 action.Configuration = jObject.ToString();

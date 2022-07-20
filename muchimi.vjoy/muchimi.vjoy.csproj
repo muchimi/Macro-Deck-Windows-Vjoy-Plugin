@@ -15,7 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Macro-Deck-main\Macro Deck 2.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GregsStack.InputSimulatorStandard\GregsStack.InputSimulatorStandard.csproj" />
+    <ProjectReference Include="..\..\Macro-Deck-main\Macro-Deck\Macro Deck 2.csproj" />
   </ItemGroup>
 
   <ItemGroup>

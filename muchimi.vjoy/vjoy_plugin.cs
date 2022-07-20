@@ -1,32 +1,21 @@
 ﻿using SuchByte.MacroDeck.Plugins;
 using System;
 using System.Collections.Generic;
-using System.Printing;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Automation;
-using System.Windows.Forms;
-using System.Windows.Navigation;
-using Windows.ApplicationModel.Calls.Background;
-using Windows.Graphics.Printing.Workflow;
-using Windows.Media.Capture;
 using GregsStack.InputSimulatorStandard;
-using HidSharp.Reports.Units;
 using muchimi.vjoy;
-using muchimi_vjoy;
-using Newtonsoft.Json.Linq;
 using SuchByte.MacroDeck.ActionButton;
+using SuchByte.MacroDeck.Events;
 using SuchByte.MacroDeck.GUI;
 using SuchByte.MacroDeck.GUI.CustomControls;
 using SuchByte.MacroDeck.Logging;
+using SuchByte.MacroDeck.Profiles;
 using SuchByte.MacroDeck.Variables;
-using SuchByte.MacroDeck.Variables.Plugin.GUI;
-using vJoy.Wrapper;
+using SuchByte.MacroDeck.Variables.Plugin;
 using Timer = System.Timers.Timer;
 
 namespace muchimi_vjoy
@@ -79,12 +68,12 @@ namespace muchimi_vjoy
 
 
 
-
     public class Main : MacroDeckPlugin
     {
 
         public static Main Instance;
         public Dictionary<string, Timer> _Timers;
+
 
         Timer GetNewTimer(ConfigData data)
         {
@@ -109,8 +98,7 @@ namespace muchimi_vjoy
         }
 
 
-
-    public Main()
+        public Main()
         {
 
             Instance = this;
@@ -121,9 +109,9 @@ namespace muchimi_vjoy
 
             _Timers = new Dictionary<string, Timer>();
 
-
-            //icon: icon is set from the file "ExtensionIcon.png" located in the plugin folder - doc on this is wrong
         }
+
+
 
         // Optional; If your plugin can be configured, set to "true". It'll make the "Configure" button appear in the package manager.
         public override bool CanConfigure => false;
