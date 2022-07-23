@@ -2,12 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Timers;
 using System.Windows.Automation;
 using GregsStack.InputSimulatorStandard;
 using muchimi.vjoy;
+using Newtonsoft.Json;
 using SuchByte.MacroDeck.ActionButton;
 using SuchByte.MacroDeck.Events;
 using SuchByte.MacroDeck.GUI;
@@ -17,6 +20,8 @@ using SuchByte.MacroDeck.Profiles;
 using SuchByte.MacroDeck.Variables;
 using SuchByte.MacroDeck.Variables.Plugin;
 using Timer = System.Timers.Timer;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace muchimi_vjoy
 {
@@ -67,17 +72,21 @@ namespace muchimi_vjoy
     }
 
 
-
     public class Main : MacroDeckPlugin
     {
 
+
+
+        // Optional; If your plugin can be configured, set to "true". It'll make the "Configure" button appear in the package manager.
+        public override bool CanConfigure => false;
         public static Main Instance;
         public Dictionary<string, Timer> _Timers;
 
+        public VjoyPluginConfiguration Config;
 
         Timer GetNewTimer(ConfigData data)
         {
-        
+
             _Timers[data.ActionId] = new Timer();
             return _Timers[data.ActionId];
         }
@@ -97,12 +106,90 @@ namespace muchimi_vjoy
             _Timers[data.ActionId] = null;
         }
 
+        [DllImport("user32.dll")]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+
+        [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("User32.dll")]
+        public static extern string GetWindowText(IntPtr hWnd);
+        
+        /// <summary>
+        /// locates a window or process by name
+        /// </summary>
+        /// <param name="processName">name of window or process to locate</param>
+        /// <returns>true if found</returns>
+        public static bool FindApp(string processName)
+        {
+            if (processName == VjoyPluginConfiguration.FOCUSED_APP)
+            {
+                // use whatever currently has the focus
+                return true;
+            }
+
+            IntPtr handle;
+
+            handle = FindWindow(null, processName);
+
+            if (handle == IntPtr.Zero)
+            {
+                MacroDeckLogger.Info(Main.Instance, $"didn't find a window named {processName} - looking at processes");
+                // try by process name instead
+                foreach (Process p in Process.GetProcessesByName(processName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool ActivateApp(string processName = null)
+        {
+
+
+            if (processName == VjoyPluginConfiguration.FOCUSED_APP)
+            {
+                // use whatever currently has the focus
+                return true;
+            }
+
+            IntPtr handle;
+
+            handle = FindWindow(null, processName);
+
+            if (handle == IntPtr.Zero)
+            {
+                MacroDeckLogger.Info(Main.Instance, $"didn't find a window named {processName} - looking at processes");
+                // try by process name instead
+                foreach (Process p in Process.GetProcessesByName(processName))
+                {
+                    handle = p.Handle;
+                    MacroDeckLogger.Info(Main.Instance, $"found process:  {p.ProcessName}");
+                    break;
+                }
+            }
+
+            if (handle != IntPtr.Zero && SetForegroundWindow(handle))
+            {
+                MacroDeckLogger.Info(Main.Instance, $"focus changed to {processName}");
+                return true;
+            }
+
+            return false;
+        }
+
 
         public Main()
         {
 
             Instance = this;
             PluginInstance.Main = this;
+            Config = new VjoyPluginConfiguration();
+
+
 
             this.Vjoy = new VjoyInstance();
             this.InputSim = new InputSimulator();
@@ -113,21 +200,21 @@ namespace muchimi_vjoy
 
 
 
-        // Optional; If your plugin can be configured, set to "true". It'll make the "Configure" button appear in the package manager.
-        public override bool CanConfigure => false;
 
         // Gets called when the plugin is loaded
         public override void Enable()
         {
-            this.Actions = new List<PluginAction>{
+            this.Actions = new List<PluginAction>
+            {
                 // add the instances of your actions here
                 new VjoyAction(),
                 new InputAction(),
             };
 
+            Config.LoadConfig();
 
         }
-        
+
 
         public VjoyInstance Vjoy;
 
@@ -137,7 +224,7 @@ namespace muchimi_vjoy
         //public override void OpenConfigurator()
         //{
         //    // Open your configuration form here
-        //    using (var configurator = new Configurator())
+        //    using (var configurator = new VjoyPluginConfigurator())
         //    {
         //        configurator.ShowDialog();
         //    }
@@ -197,8 +284,8 @@ namespace muchimi_vjoy
                             RemoveTimer(data);
                         };
                         timer.Start();
-                        
-                        
+
+
                         break;
                 }
             }
@@ -215,7 +302,7 @@ namespace muchimi_vjoy
             var vjoy = Main.Instance.Vjoy;
 
             //MacroDeckLogger.Info(Main.Instance,"BumpAxis()");
-            
+
             vjoy.GetAxis(data.DeviceNumber, data.Axis, out var value, out _, out _);
             value += data.AxisValue;
             if (value < -1.0)
@@ -232,15 +319,15 @@ namespace muchimi_vjoy
 
 
         /// <summary>
-            /// runs an axis change request
-            /// </summary>
-            /// <param name="data"></param>
+        /// runs an axis change request
+        /// </summary>
+        /// <param name="data"></param>
         void RunAxisAction(ConfigData data, ActionButton actionButton, EActionType actionType)
         {
 
             var vjoy = Main.Instance.Vjoy;
             var deviceId = data.DeviceNumber;
-            
+
             // stop any active axis tasks for this action
 
 
@@ -257,9 +344,6 @@ namespace muchimi_vjoy
             }
 
         }
-
-
-
     }
 
 
@@ -320,13 +404,13 @@ namespace muchimi_vjoy
                 Main.Instance.RunAction(data, actionButton, actionType);
             }
 
-            
+
 
 
         }
 
 
-       
+
         //// Optional; Gets called when the action button gets deleted
         //public override void OnActionButtonDelete()
         //{
@@ -338,11 +422,11 @@ namespace muchimi_vjoy
         //{
 
         //}
-        
-        
+
+
     }
 
-    public partial class VjoyActionConfigurator 
+    public partial class VjoyActionConfigurator
     {
         private VjoyAction vjoyAction;
         private ConfigData data = new ConfigData();
@@ -356,8 +440,6 @@ namespace muchimi_vjoy
         private void LoadConfig()
         {
             // loads the configuration for this action
-
-            data.LoadVjoyConfig(this.vjoyAction);
 
             var vjoy = Main.Instance.Vjoy;
 
@@ -399,9 +481,9 @@ namespace muchimi_vjoy
             cb_axis_selector.SelectedItem = data.AxisName;
             tb_axis_value.Text = data.AxisValue.ToString();
 
-            switch(data.AxisMode)
+            switch (data.AxisMode)
             {
-                
+
                 case EAxisMode.absolute:
                     rb_absolute.Checked = true;
                     break;
@@ -410,7 +492,9 @@ namespace muchimi_vjoy
                     break;
 
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    rb_absolute.Checked = true;
+                    break;
+
             }
 
             tb_axis_interval.Text = data.AxisPulseInterval.ToString();
@@ -423,7 +507,7 @@ namespace muchimi_vjoy
             int x;
             int y;
             var vjoy = Main.Instance.Vjoy;
-            vjoy.HatCoords(value,out x, out y);
+            vjoy.HatCoords(value, out x, out y);
             switch (x)
             {
                 case 0:
@@ -477,6 +561,9 @@ namespace muchimi_vjoy
 
 
     }
+
+
+
 
 
 

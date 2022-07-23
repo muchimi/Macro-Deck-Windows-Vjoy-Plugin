@@ -16,18 +16,13 @@ namespace muchimi_vjoy
         private RadioButton rb_button_pulse;
         private Label label1;
         private RadioButton rb_button_off;
-        private TextBox tb_button_number;
         private Label lbl_message;
         private Panel panel2;
-        private TextBox tb_device_number;
+        private RoundedTextBox tb_device_number;
         private Label label2;
-        private TextBox tb_pulse_interval;
-        private Button cmd_test;
-        private System.Windows.Forms.ComboBox cb_axis_selector;
         private Label label3;
         private CheckBox cb_axis;
         private CheckBox cb_button;
-        private TextBox tb_axis_value;
         private Label label4;
         private Label lbl_device;
         private Panel panel3;
@@ -46,11 +41,18 @@ namespace muchimi_vjoy
         private RadioButton rb_0m1;
         private Panel pan_axis;
         private Label label5;
-        private Button cmd_axis_center;
-        private Button cmd_axis_max;
-        private Button cmd_axis_min;
+        private ButtonPrimary cmd_axis_center;
+        private ButtonPrimary cmd_axis_max;
+        private ButtonPrimary cmd_axis_min;
         private Label label6;
-        private TextBox tb_axis_interval;
+        private RoundedComboBox cb_axis_selector;
+        private RoundedTextBox tb_axis_interval;
+        private RoundedTextBox tb_axis_value;
+        private RoundedTextBox tb_pulse_interval;
+        private RoundedTextBox tb_button_number;
+        private ButtonPrimary cmd_test;
+        private ButtonPrimary cmd_paste;
+        private ButtonPrimary cmd_copy;
         private ToolTip tp_info;
 
 
@@ -62,6 +64,7 @@ namespace muchimi_vjoy
 
             InitializeComponent();
 
+            data.LoadVjoyConfig(pluginAction);
             this.LoadConfig();
 
 
@@ -72,16 +75,19 @@ namespace muchimi_vjoy
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.tb_button_number = new SuchByte.MacroDeck.GUI.CustomControls.RoundedTextBox();
+            this.tb_pulse_interval = new SuchByte.MacroDeck.GUI.CustomControls.RoundedTextBox();
+            this.cb_axis_selector = new SuchByte.MacroDeck.GUI.CustomControls.RoundedComboBox();
             this.pan_axis = new System.Windows.Forms.Panel();
+            this.tb_axis_interval = new SuchByte.MacroDeck.GUI.CustomControls.RoundedTextBox();
+            this.tb_axis_value = new SuchByte.MacroDeck.GUI.CustomControls.RoundedTextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.tb_axis_interval = new System.Windows.Forms.TextBox();
-            this.cmd_axis_center = new System.Windows.Forms.Button();
-            this.cmd_axis_max = new System.Windows.Forms.Button();
-            this.cmd_axis_min = new System.Windows.Forms.Button();
+            this.cmd_axis_center = new SuchByte.MacroDeck.GUI.CustomControls.ButtonPrimary();
+            this.cmd_axis_max = new SuchByte.MacroDeck.GUI.CustomControls.ButtonPrimary();
+            this.cmd_axis_min = new SuchByte.MacroDeck.GUI.CustomControls.ButtonPrimary();
             this.panel3 = new System.Windows.Forms.Panel();
             this.rb_relative = new System.Windows.Forms.RadioButton();
             this.rb_absolute = new System.Windows.Forms.RadioButton();
-            this.tb_axis_value = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.pan_hat = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
@@ -100,17 +106,16 @@ namespace muchimi_vjoy
             this.rb_button_off = new System.Windows.Forms.RadioButton();
             this.cb_axis = new System.Windows.Forms.CheckBox();
             this.cb_button = new System.Windows.Forms.CheckBox();
-            this.cb_axis_selector = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.tb_pulse_interval = new System.Windows.Forms.TextBox();
-            this.tb_button_number = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.cmd_test = new System.Windows.Forms.Button();
             this.lbl_message = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.tb_device_number = new System.Windows.Forms.TextBox();
+            this.cmd_test = new SuchByte.MacroDeck.GUI.CustomControls.ButtonPrimary();
+            this.tb_device_number = new SuchByte.MacroDeck.GUI.CustomControls.RoundedTextBox();
             this.lbl_device = new System.Windows.Forms.Label();
+            this.cmd_paste = new SuchByte.MacroDeck.GUI.CustomControls.ButtonPrimary();
+            this.cmd_copy = new SuchByte.MacroDeck.GUI.CustomControls.ButtonPrimary();
             this.panel1.SuspendLayout();
             this.pan_axis.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -121,94 +126,212 @@ namespace muchimi_vjoy
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.cmd_paste);
+            this.panel1.Controls.Add(this.cmd_copy);
+            this.panel1.Controls.Add(this.tb_button_number);
+            this.panel1.Controls.Add(this.tb_pulse_interval);
+            this.panel1.Controls.Add(this.cb_axis_selector);
             this.panel1.Controls.Add(this.pan_axis);
             this.panel1.Controls.Add(this.pan_hat);
             this.panel1.Controls.Add(this.panel4);
             this.panel1.Controls.Add(this.cb_axis);
             this.panel1.Controls.Add(this.cb_button);
-            this.panel1.Controls.Add(this.cb_axis_selector);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.tb_pulse_interval);
-            this.panel1.Controls.Add(this.tb_button_number);
             this.panel1.Controls.Add(this.label1);
+            this.panel1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.panel1.Location = new System.Drawing.Point(209, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(626, 372);
             this.panel1.TabIndex = 0;
             // 
+            // tb_button_number
+            // 
+            this.tb_button_number.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.tb_button_number.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tb_button_number.Icon = null;
+            this.tb_button_number.Location = new System.Drawing.Point(76, 59);
+            this.tb_button_number.MaxCharacters = 32767;
+            this.tb_button_number.Multiline = false;
+            this.tb_button_number.Name = "tb_button_number";
+            this.tb_button_number.Padding = new System.Windows.Forms.Padding(8, 5, 8, 5);
+            this.tb_button_number.PasswordChar = false;
+            this.tb_button_number.PlaceHolderColor = System.Drawing.Color.Gray;
+            this.tb_button_number.PlaceHolderText = "";
+            this.tb_button_number.ReadOnly = false;
+            this.tb_button_number.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.tb_button_number.SelectionStart = 0;
+            this.tb_button_number.Size = new System.Drawing.Size(58, 25);
+            this.tb_button_number.TabIndex = 21;
+            this.tb_button_number.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
+            this.tb_button_number.TextChanged += new System.EventHandler(this.tb_button_number_TextChanged);
+            // 
+            // tb_pulse_interval
+            // 
+            this.tb_pulse_interval.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.tb_pulse_interval.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tb_pulse_interval.Icon = null;
+            this.tb_pulse_interval.Location = new System.Drawing.Point(293, 59);
+            this.tb_pulse_interval.MaxCharacters = 32767;
+            this.tb_pulse_interval.Multiline = false;
+            this.tb_pulse_interval.Name = "tb_pulse_interval";
+            this.tb_pulse_interval.Padding = new System.Windows.Forms.Padding(8, 5, 8, 5);
+            this.tb_pulse_interval.PasswordChar = false;
+            this.tb_pulse_interval.PlaceHolderColor = System.Drawing.Color.Gray;
+            this.tb_pulse_interval.PlaceHolderText = "";
+            this.tb_pulse_interval.ReadOnly = false;
+            this.tb_pulse_interval.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.tb_pulse_interval.SelectionStart = 0;
+            this.tb_pulse_interval.Size = new System.Drawing.Size(93, 25);
+            this.tb_pulse_interval.TabIndex = 20;
+            this.tb_pulse_interval.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
+            this.tb_pulse_interval.TextChanged += new System.EventHandler(this.tb_pulse_interval_TextChanged);
+            // 
+            // cb_axis_selector
+            // 
+            this.cb_axis_selector.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.cb_axis_selector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cb_axis_selector.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cb_axis_selector.Icon = null;
+            this.cb_axis_selector.Location = new System.Drawing.Point(63, 242);
+            this.cb_axis_selector.Name = "cb_axis_selector";
+            this.cb_axis_selector.Padding = new System.Windows.Forms.Padding(8, 2, 8, 2);
+            this.cb_axis_selector.SelectedIndex = -1;
+            this.cb_axis_selector.SelectedItem = null;
+            this.cb_axis_selector.Size = new System.Drawing.Size(180, 26);
+            this.cb_axis_selector.TabIndex = 19;
+            this.cb_axis_selector.SelectedIndexChanged += new System.EventHandler(this.cb_axis_selector_SelectedIndexChanged);
+            // 
             // pan_axis
             // 
-            this.pan_axis.Controls.Add(this.label6);
             this.pan_axis.Controls.Add(this.tb_axis_interval);
+            this.pan_axis.Controls.Add(this.tb_axis_value);
+            this.pan_axis.Controls.Add(this.label6);
             this.pan_axis.Controls.Add(this.cmd_axis_center);
             this.pan_axis.Controls.Add(this.cmd_axis_max);
             this.pan_axis.Controls.Add(this.cmd_axis_min);
             this.pan_axis.Controls.Add(this.panel3);
-            this.pan_axis.Controls.Add(this.tb_axis_value);
             this.pan_axis.Controls.Add(this.label4);
+            this.pan_axis.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.pan_axis.Location = new System.Drawing.Point(262, 208);
             this.pan_axis.Name = "pan_axis";
             this.pan_axis.Size = new System.Drawing.Size(371, 145);
             this.pan_axis.TabIndex = 18;
             // 
+            // tb_axis_interval
+            // 
+            this.tb_axis_interval.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.tb_axis_interval.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tb_axis_interval.Icon = null;
+            this.tb_axis_interval.Location = new System.Drawing.Point(256, 35);
+            this.tb_axis_interval.MaxCharacters = 32767;
+            this.tb_axis_interval.Multiline = false;
+            this.tb_axis_interval.Name = "tb_axis_interval";
+            this.tb_axis_interval.Padding = new System.Windows.Forms.Padding(8, 5, 8, 5);
+            this.tb_axis_interval.PasswordChar = false;
+            this.tb_axis_interval.PlaceHolderColor = System.Drawing.Color.Gray;
+            this.tb_axis_interval.PlaceHolderText = "";
+            this.tb_axis_interval.ReadOnly = false;
+            this.tb_axis_interval.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.tb_axis_interval.SelectionStart = 0;
+            this.tb_axis_interval.Size = new System.Drawing.Size(92, 25);
+            this.tb_axis_interval.TabIndex = 21;
+            this.tb_axis_interval.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
+            this.tb_axis_interval.TextChanged += new System.EventHandler(this.tb_axis_interval_TextChanged);
+            // 
+            // tb_axis_value
+            // 
+            this.tb_axis_value.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.tb_axis_value.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tb_axis_value.Icon = null;
+            this.tb_axis_value.Location = new System.Drawing.Point(6, 34);
+            this.tb_axis_value.MaxCharacters = 32767;
+            this.tb_axis_value.Multiline = false;
+            this.tb_axis_value.Name = "tb_axis_value";
+            this.tb_axis_value.Padding = new System.Windows.Forms.Padding(8, 5, 8, 5);
+            this.tb_axis_value.PasswordChar = false;
+            this.tb_axis_value.PlaceHolderColor = System.Drawing.Color.Gray;
+            this.tb_axis_value.PlaceHolderText = "";
+            this.tb_axis_value.ReadOnly = false;
+            this.tb_axis_value.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.tb_axis_value.SelectionStart = 0;
+            this.tb_axis_value.Size = new System.Drawing.Size(99, 25);
+            this.tb_axis_value.TabIndex = 20;
+            this.tb_axis_value.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
+            this.tb_axis_value.TextChanged += new System.EventHandler(this.tb_axis_value_TextChanged);
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(264, 25);
+            this.label6.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label6.Location = new System.Drawing.Point(259, 13);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(74, 23);
+            this.label6.Size = new System.Drawing.Size(50, 16);
             this.label6.TabIndex = 20;
             this.label6.Text = "Interval";
             // 
-            // tb_axis_interval
-            // 
-            this.tb_axis_interval.Location = new System.Drawing.Point(264, 57);
-            this.tb_axis_interval.Name = "tb_axis_interval";
-            this.tb_axis_interval.Size = new System.Drawing.Size(100, 30);
-            this.tb_axis_interval.TabIndex = 19;
-            this.tb_axis_interval.TextChanged += new System.EventHandler(this.tb_axis_interval_TextChanged);
-            // 
             // cmd_axis_center
             // 
-            this.cmd_axis_center.BackColor = System.Drawing.Color.Black;
+            this.cmd_axis_center.BorderRadius = 8;
+            this.cmd_axis_center.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmd_axis_center.Font = new System.Drawing.Font("Wingdings 2", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmd_axis_center.ForeColor = System.Drawing.Color.White;
+            this.cmd_axis_center.HoverColor = System.Drawing.Color.Empty;
+            this.cmd_axis_center.Icon = null;
             this.cmd_axis_center.Location = new System.Drawing.Point(40, 73);
             this.cmd_axis_center.Name = "cmd_axis_center";
+            this.cmd_axis_center.Progress = 0;
+            this.cmd_axis_center.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(103)))), ((int)(((byte)(205)))));
             this.cmd_axis_center.Size = new System.Drawing.Size(32, 23);
             this.cmd_axis_center.TabIndex = 18;
             this.cmd_axis_center.Text = "";
             this.cmd_axis_center.UseVisualStyleBackColor = false;
+            this.cmd_axis_center.UseWindowsAccentColor = true;
             this.cmd_axis_center.Click += new System.EventHandler(this.cmd_axis_center_Click);
             // 
             // cmd_axis_max
             // 
-            this.cmd_axis_max.BackColor = System.Drawing.Color.Black;
+            this.cmd_axis_max.BorderRadius = 8;
+            this.cmd_axis_max.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmd_axis_max.Font = new System.Drawing.Font("Wingdings 2", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmd_axis_max.ForeColor = System.Drawing.Color.White;
+            this.cmd_axis_max.HoverColor = System.Drawing.Color.Empty;
+            this.cmd_axis_max.Icon = null;
             this.cmd_axis_max.Location = new System.Drawing.Point(73, 73);
             this.cmd_axis_max.Name = "cmd_axis_max";
+            this.cmd_axis_max.Progress = 0;
+            this.cmd_axis_max.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(103)))), ((int)(((byte)(205)))));
             this.cmd_axis_max.Size = new System.Drawing.Size(32, 23);
             this.cmd_axis_max.TabIndex = 17;
             this.cmd_axis_max.Text = "";
             this.cmd_axis_max.UseVisualStyleBackColor = false;
+            this.cmd_axis_max.UseWindowsAccentColor = true;
             this.cmd_axis_max.Click += new System.EventHandler(this.cmd_axis_max_Click);
             // 
             // cmd_axis_min
             // 
-            this.cmd_axis_min.BackColor = System.Drawing.Color.Black;
+            this.cmd_axis_min.BorderRadius = 8;
+            this.cmd_axis_min.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmd_axis_min.Font = new System.Drawing.Font("Wingdings 2", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmd_axis_min.ForeColor = System.Drawing.Color.White;
+            this.cmd_axis_min.HoverColor = System.Drawing.Color.Empty;
+            this.cmd_axis_min.Icon = null;
             this.cmd_axis_min.Location = new System.Drawing.Point(5, 73);
             this.cmd_axis_min.Name = "cmd_axis_min";
+            this.cmd_axis_min.Progress = 0;
+            this.cmd_axis_min.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(103)))), ((int)(((byte)(205)))));
             this.cmd_axis_min.Size = new System.Drawing.Size(32, 23);
             this.cmd_axis_min.TabIndex = 16;
             this.cmd_axis_min.Text = "";
             this.cmd_axis_min.UseVisualStyleBackColor = false;
+            this.cmd_axis_min.UseWindowsAccentColor = true;
             this.cmd_axis_min.Click += new System.EventHandler(this.cmd_axis_min_Click);
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.rb_relative);
             this.panel3.Controls.Add(this.rb_absolute);
+            this.panel3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.panel3.Location = new System.Drawing.Point(122, 26);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(128, 103);
@@ -217,9 +340,10 @@ namespace muchimi_vjoy
             // rb_relative
             // 
             this.rb_relative.AutoSize = true;
+            this.rb_relative.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_relative.Location = new System.Drawing.Point(3, 31);
             this.rb_relative.Name = "rb_relative";
-            this.rb_relative.Size = new System.Drawing.Size(93, 27);
+            this.rb_relative.Size = new System.Drawing.Size(70, 20);
             this.rb_relative.TabIndex = 1;
             this.rb_relative.TabStop = true;
             this.rb_relative.Text = "Relative";
@@ -229,29 +353,23 @@ namespace muchimi_vjoy
             // rb_absolute
             // 
             this.rb_absolute.AutoSize = true;
+            this.rb_absolute.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_absolute.Location = new System.Drawing.Point(4, -2);
             this.rb_absolute.Name = "rb_absolute";
-            this.rb_absolute.Size = new System.Drawing.Size(99, 27);
+            this.rb_absolute.Size = new System.Drawing.Size(74, 20);
             this.rb_absolute.TabIndex = 0;
             this.rb_absolute.TabStop = true;
             this.rb_absolute.Text = "Absolute";
             this.rb_absolute.UseVisualStyleBackColor = true;
             this.rb_absolute.CheckedChanged += new System.EventHandler(this.rb_absolute_CheckedChanged);
             // 
-            // tb_axis_value
-            // 
-            this.tb_axis_value.Location = new System.Drawing.Point(5, 37);
-            this.tb_axis_value.Name = "tb_axis_value";
-            this.tb_axis_value.Size = new System.Drawing.Size(100, 30);
-            this.tb_axis_value.TabIndex = 14;
-            this.tb_axis_value.TextChanged += new System.EventHandler(this.tb_axis_value_TextChanged);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label4.Location = new System.Drawing.Point(3, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 23);
+            this.label4.Size = new System.Drawing.Size(39, 16);
             this.label4.TabIndex = 13;
             this.label4.Text = "Value";
             // 
@@ -267,6 +385,7 @@ namespace muchimi_vjoy
             this.pan_hat.Controls.Add(this.rb_m11);
             this.pan_hat.Controls.Add(this.rb_01);
             this.pan_hat.Controls.Add(this.rb_00);
+            this.pan_hat.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.pan_hat.Location = new System.Drawing.Point(452, 38);
             this.pan_hat.Name = "pan_hat";
             this.pan_hat.Size = new System.Drawing.Size(313, 151);
@@ -275,15 +394,17 @@ namespace muchimi_vjoy
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label5.Location = new System.Drawing.Point(4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(108, 23);
+            this.label5.Size = new System.Drawing.Size(74, 16);
             this.label5.TabIndex = 8;
             this.label5.Text = "Hat Position";
             // 
             // rb_0m1
             // 
             this.rb_0m1.AutoSize = true;
+            this.rb_0m1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_0m1.Location = new System.Drawing.Point(46, 101);
             this.rb_0m1.Name = "rb_0m1";
             this.rb_0m1.Size = new System.Drawing.Size(14, 13);
@@ -294,6 +415,7 @@ namespace muchimi_vjoy
             // rb_m1m1
             // 
             this.rb_m1m1.AutoSize = true;
+            this.rb_m1m1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_m1m1.Location = new System.Drawing.Point(25, 87);
             this.rb_m1m1.Name = "rb_m1m1";
             this.rb_m1m1.Size = new System.Drawing.Size(14, 13);
@@ -304,6 +426,7 @@ namespace muchimi_vjoy
             // rb_m10
             // 
             this.rb_m10.AutoSize = true;
+            this.rb_m10.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_m10.Location = new System.Drawing.Point(14, 65);
             this.rb_m10.Name = "rb_m10";
             this.rb_m10.Size = new System.Drawing.Size(14, 13);
@@ -314,6 +437,7 @@ namespace muchimi_vjoy
             // rb_1m1
             // 
             this.rb_1m1.AutoSize = true;
+            this.rb_1m1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_1m1.Location = new System.Drawing.Point(69, 87);
             this.rb_1m1.Name = "rb_1m1";
             this.rb_1m1.Size = new System.Drawing.Size(14, 13);
@@ -324,6 +448,7 @@ namespace muchimi_vjoy
             // rb_10
             // 
             this.rb_10.AutoSize = true;
+            this.rb_10.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_10.Location = new System.Drawing.Point(81, 65);
             this.rb_10.Name = "rb_10";
             this.rb_10.Size = new System.Drawing.Size(14, 13);
@@ -334,6 +459,7 @@ namespace muchimi_vjoy
             // rb_11
             // 
             this.rb_11.AutoSize = true;
+            this.rb_11.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_11.Location = new System.Drawing.Point(69, 43);
             this.rb_11.Name = "rb_11";
             this.rb_11.Size = new System.Drawing.Size(14, 13);
@@ -344,6 +470,7 @@ namespace muchimi_vjoy
             // rb_m11
             // 
             this.rb_m11.AutoSize = true;
+            this.rb_m11.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_m11.Location = new System.Drawing.Point(25, 44);
             this.rb_m11.Name = "rb_m11";
             this.rb_m11.Size = new System.Drawing.Size(14, 13);
@@ -354,6 +481,7 @@ namespace muchimi_vjoy
             // rb_01
             // 
             this.rb_01.AutoSize = true;
+            this.rb_01.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_01.Location = new System.Drawing.Point(46, 32);
             this.rb_01.Name = "rb_01";
             this.rb_01.Size = new System.Drawing.Size(14, 13);
@@ -364,6 +492,7 @@ namespace muchimi_vjoy
             // rb_00
             // 
             this.rb_00.AutoSize = true;
+            this.rb_00.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_00.Location = new System.Drawing.Point(46, 65);
             this.rb_00.Name = "rb_00";
             this.rb_00.Size = new System.Drawing.Size(14, 13);
@@ -376,6 +505,7 @@ namespace muchimi_vjoy
             this.panel4.Controls.Add(this.rb_button_pulse);
             this.panel4.Controls.Add(this.rb_button_on);
             this.panel4.Controls.Add(this.rb_button_off);
+            this.panel4.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.panel4.Location = new System.Drawing.Point(156, 59);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(121, 79);
@@ -384,9 +514,10 @@ namespace muchimi_vjoy
             // rb_button_pulse
             // 
             this.rb_button_pulse.AutoSize = true;
+            this.rb_button_pulse.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_button_pulse.Location = new System.Drawing.Point(0, 0);
             this.rb_button_pulse.Name = "rb_button_pulse";
-            this.rb_button_pulse.Size = new System.Drawing.Size(71, 27);
+            this.rb_button_pulse.Size = new System.Drawing.Size(55, 20);
             this.rb_button_pulse.TabIndex = 1;
             this.rb_button_pulse.TabStop = true;
             this.rb_button_pulse.Text = "Pulse";
@@ -396,9 +527,10 @@ namespace muchimi_vjoy
             // rb_button_on
             // 
             this.rb_button_on.AutoSize = true;
+            this.rb_button_on.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_button_on.Location = new System.Drawing.Point(0, 24);
             this.rb_button_on.Name = "rb_button_on";
-            this.rb_button_on.Size = new System.Drawing.Size(52, 27);
+            this.rb_button_on.Size = new System.Drawing.Size(41, 20);
             this.rb_button_on.TabIndex = 2;
             this.rb_button_on.TabStop = true;
             this.rb_button_on.Text = "On";
@@ -408,9 +540,10 @@ namespace muchimi_vjoy
             // rb_button_off
             // 
             this.rb_button_off.AutoSize = true;
+            this.rb_button_off.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.rb_button_off.Location = new System.Drawing.Point(-1, 48);
             this.rb_button_off.Name = "rb_button_off";
-            this.rb_button_off.Size = new System.Drawing.Size(53, 27);
+            this.rb_button_off.Size = new System.Drawing.Size(42, 20);
             this.rb_button_off.TabIndex = 3;
             this.rb_button_off.TabStop = true;
             this.rb_button_off.Text = "Off";
@@ -420,9 +553,10 @@ namespace muchimi_vjoy
             // cb_axis
             // 
             this.cb_axis.AutoSize = true;
+            this.cb_axis.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cb_axis.Location = new System.Drawing.Point(30, 176);
             this.cb_axis.Name = "cb_axis";
-            this.cb_axis.Size = new System.Drawing.Size(125, 27);
+            this.cb_axis.Size = new System.Drawing.Size(91, 20);
             this.cb_axis.TabIndex = 12;
             this.cb_axis.Text = "Output Axis";
             this.cb_axis.UseVisualStyleBackColor = true;
@@ -431,113 +565,156 @@ namespace muchimi_vjoy
             // cb_button
             // 
             this.cb_button.AutoSize = true;
+            this.cb_button.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.cb_button.Location = new System.Drawing.Point(30, 7);
             this.cb_button.Name = "cb_button";
-            this.cb_button.Size = new System.Drawing.Size(148, 27);
+            this.cb_button.Size = new System.Drawing.Size(104, 20);
             this.cb_button.TabIndex = 11;
             this.cb_button.Text = "Output Button";
             this.cb_button.UseVisualStyleBackColor = true;
             this.cb_button.CheckedChanged += new System.EventHandler(this.cb_button_CheckedChanged);
             // 
-            // cb_axis_selector
-            // 
-            this.cb_axis_selector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cb_axis_selector.FormattingEnabled = true;
-            this.cb_axis_selector.Location = new System.Drawing.Point(77, 244);
-            this.cb_axis_selector.Name = "cb_axis_selector";
-            this.cb_axis_selector.Size = new System.Drawing.Size(138, 31);
-            this.cb_axis_selector.TabIndex = 10;
-            this.cb_axis_selector.SelectedIndexChanged += new System.EventHandler(this.cb_axis_selector_SelectedIndexChanged);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label3.Location = new System.Drawing.Point(77, 207);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 23);
+            this.label3.Size = new System.Drawing.Size(30, 16);
             this.label3.TabIndex = 9;
             this.label3.Text = "Axis";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label2.Location = new System.Drawing.Point(293, 38);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 23);
+            this.label2.Size = new System.Drawing.Size(50, 16);
             this.label2.TabIndex = 7;
             this.label2.Text = "Interval";
-            // 
-            // tb_pulse_interval
-            // 
-            this.tb_pulse_interval.Location = new System.Drawing.Point(293, 70);
-            this.tb_pulse_interval.Name = "tb_pulse_interval";
-            this.tb_pulse_interval.Size = new System.Drawing.Size(100, 30);
-            this.tb_pulse_interval.TabIndex = 6;
-            this.tb_pulse_interval.TextChanged += new System.EventHandler(this.tb_pulse_interval_TextChanged);
-            // 
-            // tb_button_number
-            // 
-            this.tb_button_number.Location = new System.Drawing.Point(76, 70);
-            this.tb_button_number.Name = "tb_button_number";
-            this.tb_button_number.Size = new System.Drawing.Size(58, 30);
-            this.tb_button_number.TabIndex = 5;
-            this.tb_button_number.TextChanged += new System.EventHandler(this.tb_button_number_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(76, 38);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 23);
+            this.label1.Size = new System.Drawing.Size(43, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "Button";
-            // 
-            // cmd_test
-            // 
-            this.cmd_test.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.cmd_test.Location = new System.Drawing.Point(24, 107);
-            this.cmd_test.Name = "cmd_test";
-            this.cmd_test.Size = new System.Drawing.Size(121, 38);
-            this.cmd_test.TabIndex = 8;
-            this.cmd_test.Text = "Test";
-            this.cmd_test.UseVisualStyleBackColor = false;
-            this.cmd_test.Click += new System.EventHandler(this.cmd_test_Click);
             // 
             // lbl_message
             // 
             this.lbl_message.AutoSize = true;
+            this.lbl_message.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lbl_message.Location = new System.Drawing.Point(17, 378);
             this.lbl_message.Name = "lbl_message";
-            this.lbl_message.Size = new System.Drawing.Size(82, 23);
+            this.lbl_message.Size = new System.Drawing.Size(57, 16);
             this.lbl_message.TabIndex = 1;
             this.lbl_message.Text = "Message";
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.cmd_test);
             this.panel2.Controls.Add(this.tb_device_number);
             this.panel2.Controls.Add(this.lbl_device);
-            this.panel2.Controls.Add(this.cmd_test);
+            this.panel2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(200, 189);
             this.panel2.TabIndex = 2;
             // 
+            // cmd_test
+            // 
+            this.cmd_test.BorderRadius = 8;
+            this.cmd_test.FlatAppearance.BorderSize = 0;
+            this.cmd_test.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmd_test.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmd_test.ForeColor = System.Drawing.Color.White;
+            this.cmd_test.HoverColor = System.Drawing.Color.Empty;
+            this.cmd_test.Icon = null;
+            this.cmd_test.Location = new System.Drawing.Point(24, 97);
+            this.cmd_test.Name = "cmd_test";
+            this.cmd_test.Progress = 0;
+            this.cmd_test.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(103)))), ((int)(((byte)(205)))));
+            this.cmd_test.Size = new System.Drawing.Size(121, 40);
+            this.cmd_test.TabIndex = 3;
+            this.cmd_test.Text = "Test";
+            this.cmd_test.UseVisualStyleBackColor = true;
+            this.cmd_test.UseWindowsAccentColor = true;
+            this.cmd_test.Click += new System.EventHandler(this.cmd_test_Click);
+            // 
             // tb_device_number
             // 
+            this.tb_device_number.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(65)))), ((int)(((byte)(65)))));
+            this.tb_device_number.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.tb_device_number.Icon = null;
             this.tb_device_number.Location = new System.Drawing.Point(24, 65);
+            this.tb_device_number.MaxCharacters = 32767;
+            this.tb_device_number.Multiline = false;
             this.tb_device_number.Name = "tb_device_number";
-            this.tb_device_number.Size = new System.Drawing.Size(121, 30);
+            this.tb_device_number.Padding = new System.Windows.Forms.Padding(8, 5, 8, 5);
+            this.tb_device_number.PasswordChar = false;
+            this.tb_device_number.PlaceHolderColor = System.Drawing.Color.Gray;
+            this.tb_device_number.PlaceHolderText = "";
+            this.tb_device_number.ReadOnly = false;
+            this.tb_device_number.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.tb_device_number.SelectionStart = 0;
+            this.tb_device_number.Size = new System.Drawing.Size(121, 27);
             this.tb_device_number.TabIndex = 4;
+            this.tb_device_number.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
             this.tb_device_number.TextChanged += new System.EventHandler(this.tb_device_number_TextChanged);
             // 
             // lbl_device
             // 
             this.lbl_device.AutoSize = true;
+            this.lbl_device.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lbl_device.Location = new System.Drawing.Point(24, 15);
             this.lbl_device.Name = "lbl_device";
-            this.lbl_device.Size = new System.Drawing.Size(109, 23);
+            this.lbl_device.Size = new System.Drawing.Size(74, 16);
             this.lbl_device.TabIndex = 0;
             this.lbl_device.Text = "VJoy Device";
+            // 
+            // cmd_paste
+            // 
+            this.cmd_paste.BorderRadius = 8;
+            this.cmd_paste.FlatAppearance.BorderSize = 0;
+            this.cmd_paste.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmd_paste.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmd_paste.ForeColor = System.Drawing.Color.White;
+            this.cmd_paste.HoverColor = System.Drawing.Color.Empty;
+            this.cmd_paste.Icon = null;
+            this.cmd_paste.Location = new System.Drawing.Point(433, 3);
+            this.cmd_paste.Name = "cmd_paste";
+            this.cmd_paste.Progress = 0;
+            this.cmd_paste.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(103)))), ((int)(((byte)(205)))));
+            this.cmd_paste.Size = new System.Drawing.Size(102, 26);
+            this.cmd_paste.TabIndex = 25;
+            this.cmd_paste.Text = "Paste";
+            this.cmd_paste.UseVisualStyleBackColor = true;
+            this.cmd_paste.UseWindowsAccentColor = true;
+            this.cmd_paste.Click += new System.EventHandler(this.cmd_paste_Click);
+            // 
+            // cmd_copy
+            // 
+            this.cmd_copy.BorderRadius = 8;
+            this.cmd_copy.FlatAppearance.BorderSize = 0;
+            this.cmd_copy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmd_copy.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cmd_copy.ForeColor = System.Drawing.Color.White;
+            this.cmd_copy.HoverColor = System.Drawing.Color.Empty;
+            this.cmd_copy.Icon = null;
+            this.cmd_copy.Location = new System.Drawing.Point(325, 3);
+            this.cmd_copy.Name = "cmd_copy";
+            this.cmd_copy.Progress = 0;
+            this.cmd_copy.ProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(103)))), ((int)(((byte)(205)))));
+            this.cmd_copy.Size = new System.Drawing.Size(102, 26);
+            this.cmd_copy.TabIndex = 24;
+            this.cmd_copy.Text = "Copy";
+            this.cmd_copy.UseVisualStyleBackColor = true;
+            this.cmd_copy.UseWindowsAccentColor = true;
+            this.cmd_copy.Click += new System.EventHandler(this.cmd_copy_Click);
             // 
             // VjoyActionConfigurator
             // 
@@ -745,6 +922,22 @@ namespace muchimi_vjoy
 
         }
 
+        private void cmd_copy_Click(object sender, EventArgs e)
+        {
+            Main.Instance.Config.VjoyCopy(data);
+            cmd_paste.Enabled = Main.Instance.Config.VjoyClipboard != null;
+        }
 
+        private void cmd_paste_Click(object sender, EventArgs e)
+        {
+            var config = Main.Instance.Config;
+            if (config.VjoyClipboard != null)
+            {
+                // update data
+                config.VjoyPaste(ref data);
+                // reload controls with new data
+                LoadConfig();
+            }
+        }
     }
 }

@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GregsStack.InputSimulatorStandard\GregsStack.InputSimulatorStandard.csproj" />
     <ProjectReference Include="..\..\Macro-Deck-main\Macro-Deck\Macro Deck 2.csproj" />
+    <ProjectReference Include="..\..\Mumi.InputSimulatorStandard\mumi.InputSimulatorStandard.csproj" />
   </ItemGroup>
 
   <ItemGroup>
