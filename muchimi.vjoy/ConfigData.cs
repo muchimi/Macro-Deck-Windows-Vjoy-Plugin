@@ -573,6 +573,25 @@ numpad enter 0x9c 156
             {
                 return VjoyConfigFromJson(action.Configuration);
             }
+            else
+            {
+
+                // default values
+                ButtonNumber = 1;
+                DeviceNumber = 1;
+                ButtonMode = EButtonMode.pulse;
+                ButtonPulseInterval = 600;
+                AxisEnabled = false;
+                ButtonEnabled = false;
+                ActionId = Guid.NewGuid().ToString();
+                TrackState = false;
+
+                AxisMode = EAxisMode.absolute;
+                AxisValue = 0.0; // center
+                Axis = VJoyAxis.AXIS_X;
+                AxisHatValue = -1; // center
+                TargetProcess = Main.Instance.Config.LastApplication;
+            }
 
             return false;
         }
@@ -680,6 +699,19 @@ numpad enter 0x9c 156
                 }
 
 
+                var targetProcessText = "";
+                value = jObject[ConfigData.TARGET_PROCESS];
+                if (value != null)
+                {
+                    targetProcessText = value.ToString();
+                    if (string.IsNullOrWhiteSpace(targetProcessText))
+                    {
+                        // default to the focused app entry
+                        targetProcessText = VjoyPluginConfiguration.FOCUSED_APP;
+                    }
+                }
+
+
 
                 ButtonNumber = uint.Parse(buttonNumberText);
                 DeviceNumber = uint.Parse(deviceNumberText);
@@ -701,25 +733,9 @@ numpad enter 0x9c 156
                 AxisMode = Enum.TryParse(axisModeText, out EAxisMode axisMode) ? axisMode : EAxisMode.absolute;
 
 
+                TargetProcess = targetProcessText;
             }
-            else
-            {
 
-                // default values
-                ButtonNumber = 1;
-                DeviceNumber = 1;
-                ButtonMode = EButtonMode.pulse;
-                ButtonPulseInterval = 600;
-                AxisEnabled = false;
-                ButtonEnabled = false;
-                ActionId = Guid.NewGuid().ToString();
-                TrackState = false;
-
-                AxisMode = EAxisMode.absolute;
-                AxisValue = 0.0; // center
-                Axis = VJoyAxis.AXIS_X;
-                AxisHatValue = -1; // center
-            }
 
             return true;
         }
@@ -959,6 +975,8 @@ numpad enter 0x9c 156
                 [ConfigData.AXIS_VALUE] = AxisValue.ToString(),
                 [ConfigData.AXIS_HATVALUE] = AxisHatValue.ToString(),
                 [ConfigData.AXIS_PULSE_INTERVAL] = AxisPulseInterval.ToString(),
+
+                [ConfigData.TARGET_PROCESS] = TargetProcess,
             };
             return jObject.ToString();
         }
@@ -1091,7 +1109,6 @@ numpad enter 0x9c 156
             dest.Axis = source.Axis;
             dest.AxisValue = source.AxisValue;
             dest.AxisHatValue = source.AxisHatValue;
-
             dest.AxisPulseInterval = source.AxisPulseInterval;
 
 

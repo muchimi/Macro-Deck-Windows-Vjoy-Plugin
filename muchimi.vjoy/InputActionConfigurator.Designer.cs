@@ -492,7 +492,7 @@ namespace muchimi_vjoy
             this.cb_applications.SelectedItem = null;
             this.cb_applications.Size = new System.Drawing.Size(250, 28);
             this.cb_applications.TabIndex = 17;
-            this.cb_applications.SelectedIndexChanged += new System.EventHandler(this.cb_applications_SelectedIndexChanged_1);
+            this.cb_applications.SelectedIndexChanged += new System.EventHandler(this.cb_applications_SelectedIndexChanged);
             // 
             // cmd_remove
             // 

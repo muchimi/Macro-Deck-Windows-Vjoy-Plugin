@@ -223,29 +223,26 @@ namespace muchimi_vjoy
 
 
 
-        private void cmd_select_application_Click(object sender, EventArgs e)
-        {
-            var ofd = new OpenFileDialog();
-            ofd.Filter = "Applications (*.exe)|*.exe;All Files (*.*)|*.*";
-            ofd.CheckFileExists = true;
-            ofd.Multiselect=false;
-            var result = ofd.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                var config = Main.Instance.Config;
-                var name = config.FixedName(Path.GetFileNameWithoutExtension(ofd.FileName));
-                config.AddApplication(name);
-                cb_applications.SelectedItem = name;
+        //private void cmd_select_application_Click(object sender, EventArgs e)
+        //{
+        //    var ofd = new OpenFileDialog();
+        //    ofd.Filter = "Applications (*.exe)|*.exe;All Files (*.*)|*.*";
+        //    ofd.CheckFileExists = true;
+        //    ofd.Multiselect=false;
+        //    var result = ofd.ShowDialog();
+        //    if (result == DialogResult.OK)
+        //    {
+        //        var config = Main.Instance.Config;
+        //        var name = config.FixedName(Path.GetFileNameWithoutExtension(ofd.FileName));
+        //        config.AddApplication(name);
+        //        cb_applications.SelectedItem = name;
 
 
-            }
+        //    }
 
-        }
+        //}
 
-        private void cb_applications_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            data.TargetProcess = cb_applications.SelectedItem.ToString();
-        }
+ 
 
         private void cmd_remove_Click(object sender, EventArgs e)
         {
@@ -253,13 +250,13 @@ namespace muchimi_vjoy
             config.RemoveApplication(cb_applications.SelectedItem.ToString());
         }
 
-        private void cb_applications_SelectedIndexChanged_1(object sender, EventArgs e)
+        private void cb_applications_SelectedIndexChanged(object sender, EventArgs e)
         {
             string name = cb_applications.SelectedItem.ToString();
             cmd_remove.Enabled = ! string.IsNullOrEmpty(name);
             var config = Main.Instance.Config;
             config.LastApplication = name;
-
+            data.TargetProcess = name;
         }
 
         private void cmd_add_Click(object sender, EventArgs e)

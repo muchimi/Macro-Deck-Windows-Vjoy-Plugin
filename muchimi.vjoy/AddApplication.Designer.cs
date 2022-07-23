@@ -1,4 +1,4 @@
-﻿namespace muchimi.vjoy
+﻿namespace muchimi_vjoy
 {
     partial class AddApplication
     {

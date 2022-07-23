@@ -383,6 +383,17 @@ namespace muchimi_vjoy
 
             EActionType actionType = EActionType.None;
 
+            // set focus to application if needed (this is needed if the touch screen app runs local to the computer
+            var app_name = data.TargetProcess; //"Star Citizen";
+
+            if (string.IsNullOrEmpty(app_name))
+            {
+                MacroDeckLogger.Info(Main.Instance, "error: unable to set focus");
+                return;
+            }
+
+            Main.ActivateApp(app_name);
+
             if (actionButton != null)
             {
                 if (actionButton.Actions.Contains(this))
@@ -443,6 +454,8 @@ namespace muchimi_vjoy
 
             var vjoy = Main.Instance.Vjoy;
 
+            Main.Instance.Config.ApplicationListChanged += ApplicationListChanged;
+
             cb_button.Checked = data.ButtonEnabled;
             cb_axis.Checked = data.AxisEnabled;
 
@@ -500,7 +513,38 @@ namespace muchimi_vjoy
             tb_axis_interval.Text = data.AxisPulseInterval.ToString();
 
             lbl_message.Text = "";
+
+            LoadApplicationList();
         }
+
+
+        private void ApplicationListChanged(object sender, EventArgs e)
+        {
+            // called when the list is changed
+            LoadApplicationList();
+        }
+
+
+        void LoadApplicationList()
+        {
+            var config = Main.Instance.Config;
+            cb_applications.Items.Clear();
+            if (config.ApplicationList.Count > 0)
+            {
+                foreach (var app in config.ApplicationList)
+                {
+                    cb_applications.Items.Add(app);
+                }
+            }
+
+            var name = config.LastApplication;
+            if (!string.IsNullOrEmpty(name) && config.ApplicationList.Contains(name))
+                cb_applications.SelectedIndex = cb_applications.FindStringExact(name);
+
+
+        }
+
+
 
         void SetHatControls(int value)
         {

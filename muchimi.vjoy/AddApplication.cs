@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using muchimi_vjoy;
 using SuchByte.MacroDeck.GUI.CustomControls;
 
-namespace muchimi.vjoy
+namespace muchimi_vjoy
 {
     public partial class AddApplication : DialogForm
     {
